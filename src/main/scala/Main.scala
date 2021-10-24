@@ -24,9 +24,12 @@ for (line <- data.getLines) {
   def main(args: Array[String]): Unit = {
     println("hello chr")
     //save person stories (only traditional)
+    //create a dictionary hashmap
+
+    println("dictionary hashmap created")
     val myStories: List[Array[String]] = createListOfStoryArrays()
     val traditionalChar = allChars()
-    saveListOfStoriesToFileTradHanzi(myStories, traditionalChar)
+    //saveListOfStoriesToFileTradHanzi(myStories, traditionalChar)
 
     //save default character list
     //allCharsSaveToFiles()
