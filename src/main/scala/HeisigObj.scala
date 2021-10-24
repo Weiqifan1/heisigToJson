@@ -1,9 +1,11 @@
 import upickle.default.{ReadWriter => RW, macroRW}
 
-case class HeisigObj (number: Int,
-                      character:String,
-                      keyword:String,
-                      story: String,
-                      notableOtherCharacters: List[String],
+case class HeisigObj (cardNumber: Int,
+                      cardName: String,
+                      frontSide:String,
+                      backSide:String,
+                      infoPrimary: String,
+                      infoSecondary: String,
+                      notableCards: List[Int],
                       dateOfLastReview: String,
                       repetitionValue: Int)

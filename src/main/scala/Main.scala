@@ -24,12 +24,12 @@ for (line <- data.getLines) {
   def main(args: Array[String]): Unit = {
     println("hello chr")
     //save person stories (only traditional)
-    //val myStories: List[Array[String]] = createListOfStoryArrays()
-    //val traditionalChar = allChars()
-    //saveListOfStoriesToFileTradHanzi(myStories, traditionalChar)
+    val myStories: List[Array[String]] = createListOfStoryArrays()
+    val traditionalChar = allChars()
+    saveListOfStoriesToFileTradHanzi(myStories, traditionalChar)
 
     //save default character list
-    allCharsSaveToFiles()
+    //allCharsSaveToFiles()
 
 
 

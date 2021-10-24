@@ -1,6 +1,6 @@
 import upickle.default.{ReadWriter => RW, macroRW}
 
-case class HeisigCollection(characterset: String, content: Array[HeisigObj])
+case class HeisigCollection(deckName: String, cards: Array[HeisigObj])
 //object HeisigCollection{
 //  implicit val rw: RW[HeisigCollection] = macroRW
 //}

@@ -27,11 +27,21 @@ object personalStoriesParseInput {
 
   def saveListOfStoriesToFileTradHanzi(privateStories: List[Array[String]], tradHeisig: HeisigCollection) {
 
-    val newListOfHeisig: Array[HeisigObj] = tradHeisig.content.map(eachObj => {
-      val story: String = getStoryByCharacter(eachObj.character, privateStories)
-      HeisigObj(eachObj.number, eachObj.character, "", story, List[String](), eachObj.dateOfLastReview, eachObj.repetitionValue)
+    /* /*case class HeisigObj (cardNumber: Int,
+                      cardName: String,
+                      backSide:String,
+                      frontSide:String,
+                      infoPrimary: String,
+                      infoSecondary: String,
+                      notableCards: List[Int],
+                      dateOfLastReview: String,
+                      repetitionValue: Int)*/*/
+
+    val newListOfHeisig: Array[HeisigObj] = tradHeisig.cards.map(eachObj => {
+      val story: String = getStoryByCharacter(eachObj.backSide, privateStories)
+      HeisigObj(eachObj.cardNumber,"", "", eachObj.backSide, story, "", List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
     })
-    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.characterset, newListOfHeisig)
+    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
     Files.write(Paths.get("NoKeyPersonalStories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
 

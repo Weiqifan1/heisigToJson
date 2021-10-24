@@ -28,15 +28,27 @@ object allheisigcharacters {
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
     println(lines.length)
 
+    /*case class HeisigObj (cardNumber: Int,
+                      cardName: String,
+                      backSide:String,
+                      frontSide:String,
+                      infoPrimary: String,
+                      infoSecondary: String,
+                      notableCards: List[Int],
+                      dateOfLastReview: String,
+                      repetitionValue: Int)*/
+
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",
       nestedLines.filter(each => Try(each(0).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(0).toInt, elem(3), elem(7), "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(0).toInt, "", elem(7), elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray)
+
     val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",
       nestedLines.filter(each => Try(each(1).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(1).toInt, elem(4), elem(8), "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(1).toInt, "",  elem(8), elem(4), "", "", List[Int](), "0001-01-01", 0)).toArray)
+
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(2).toInt, elem(5), elem(9), "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(2).toInt, "", elem(9), elem(5), "", "", List[Int](), "0001-01-01", 0)).toArray)
 
 
     val tradJson: String = Encoder[HeisigCollection].apply(tradHanzi).toString()
@@ -63,27 +75,37 @@ object allheisigcharacters {
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
     println(lines.length)
 
+    /*case class HeisigObj (cardNumber: Int,
+                     cardName: String,
+                     backSide:String,
+                     frontSide:String,
+                     infoPrimary: String,
+                     infoSecondary: String,
+                     notableCards: List[Int],
+                     dateOfLastReview: String,
+                     repetitionValue: Int)*/
+
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",
       nestedLines.filter(each => Try(each(0).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(0).toInt, elem(3), "", "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(0).toInt, "", "", elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray)
     val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",
       nestedLines.filter(each => Try(each(1).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(1).toInt, elem(4), "", "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(2).toInt, elem(5), "", "", List[String](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray)
 
-    val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.characterset, tradHanzi.content.sortBy(_.number))
-    val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.characterset, simpHanzi.content.sortBy(_.number))
-    val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.characterset, kanji.content.sortBy(_.number))
+    val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.deckName, tradHanzi.cards.sortBy(_.cardNumber))
+    val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName, simpHanzi.cards.sortBy(_.cardNumber))
+    val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.deckName, kanji.cards.sortBy(_.cardNumber))
 
     val tradJson: String = Encoder[HeisigCollection].apply(tradFinal).toString()
     val simpJson: String = Encoder[HeisigCollection].apply(simpFinal).toString()
     val kanjiJson: String = Encoder[HeisigCollection].apply(kanjiFinal).toString()
 
-    Files.write(Paths.get("traditional.txt"), tradJson.getBytes(StandardCharsets.UTF_8))
-    Files.write(Paths.get("simplified.txt"), simpJson.getBytes(StandardCharsets.UTF_8))
-    Files.write(Paths.get("kanji.txt"), kanjiJson.getBytes(StandardCharsets.UTF_8))
+    Files.write(Paths.get("heisigtraditional.txt"), tradJson.getBytes(StandardCharsets.UTF_8))
+    Files.write(Paths.get("heisigsimplified.txt"), simpJson.getBytes(StandardCharsets.UTF_8))
+    Files.write(Paths.get("heisigkanji.txt"), kanjiJson.getBytes(StandardCharsets.UTF_8))
 
     val test = ""
 
