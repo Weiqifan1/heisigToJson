@@ -39,11 +39,11 @@ object personalStoriesParseInput {
 
     val newListOfHeisig: Array[HeisigObj] = tradHeisig.cards.map(eachObj => {
       val story: String = getStoryByCharacter(eachObj.backSide, privateStories)
-      HeisigObj(eachObj.cardNumber,"", "", eachObj.backSide, story, "", List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
+      HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, "", List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
     })
     val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
-    Files.write(Paths.get("NoKeyPersonalStories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
+    Files.write(Paths.get("personalstories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
 
 
     val str = "ertert"
