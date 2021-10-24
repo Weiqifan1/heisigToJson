@@ -48,7 +48,9 @@ object personalStoriesParseInput {
       val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
       HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, textToInclude, List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
     })
-    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig)
+
+    val emptyListOfPrevious: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
+    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig, emptyListOfPrevious.toArray)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
     Files.write(Paths.get("personalstories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
 

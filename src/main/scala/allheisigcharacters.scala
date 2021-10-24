@@ -30,27 +30,35 @@ object allheisigcharacters {
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
     println(lines.length)
 
-    /*case class HeisigObj (cardNumber: Int,
+    /*
+                      cardNumber: Int,
                       cardName: String,
-                      backSide:String,
                       frontSide:String,
+                      backSide:String,
                       infoPrimary: String,
                       infoSecondary: String,
                       notableCards: List[Int],
                       dateOfLastReview: String,
-                      repetitionValue: Int)*/
+                      repetitionValue: Int
+    */
 
+    val previousTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",
       nestedLines.filter(each => Try(each(0).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(0).toInt, "", elem(7), elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(0).toInt, "", elem(7), elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray,
+      previousTrad.toArray)
 
+    val previousSimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",
       nestedLines.filter(each => Try(each(1).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(1).toInt, "",  elem(8), elem(4), "", "", List[Int](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(1).toInt, "",  elem(8), elem(4), "", "", List[Int](), "0001-01-01", 0)).toArray,
+      previousSimp.toArray)
 
+    val previousKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(2).toInt, "", elem(9), elem(5), "", "", List[Int](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(2).toInt, "", elem(9), elem(5), "", "", List[Int](), "0001-01-01", 0)).toArray,
+      previousKanji.toArray)
 
 
     val tradJson: String = Encoder[HeisigCollection].apply(tradHanzi).toString()
@@ -116,28 +124,35 @@ object allheisigcharacters {
                      repetitionValue: Int)*/
     //add cedict and frequency string
 
+    val previousTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val tradCards: Array[HeisigObj] = createdCollectionFromNested(nestedLines, cedictTradDictionary, tzai, true)
-    val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",tradCards)
+    val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",tradCards, previousTrad.toArray)
       /*nestedLines.filter(each => Try(each(0).toInt).isSuccess)
         .map(elem =>
           new HeisigObj(elem(0).toInt, "", "", elem(3), "", "", List[Int](), "0001-01-01", 0)
           ).toArray)*/
 
+    val previousSimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val simpCards: Array[HeisigObj] = createdCollectionFromNested(nestedLines, cedictSimpDictionary, junda, false)
-    val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",simpCards)
+    val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",simpCards,previousSimp.toArray)
 
       /*nestedLines.filter(each => Try(each(1).toInt).isSuccess)
         .map(elem =>
           new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)*/
 
+    val previousKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
         .map(elem =>
-          new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray)
+          new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray,
+      previousKanji.toArray)
 
-    val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.deckName, tradHanzi.cards.sortBy(_.cardNumber))
-    val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName, simpHanzi.cards.sortBy(_.cardNumber))
-    val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.deckName, kanji.cards.sortBy(_.cardNumber))
+    val emptyTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
+    val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.deckName, tradHanzi.cards.sortBy(_.cardNumber),emptyTrad.toArray)
+    val emptySimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
+    val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName, simpHanzi.cards.sortBy(_.cardNumber),emptySimp.toArray)
+    val emptyKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
+    val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.deckName, kanji.cards.sortBy(_.cardNumber),emptyKanji.toArray)
 
     val tradJson: String = Encoder[HeisigCollection].apply(tradFinal).toString()
     val simpJson: String = Encoder[HeisigCollection].apply(simpFinal).toString()
