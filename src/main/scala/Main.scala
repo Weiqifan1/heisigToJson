@@ -63,10 +63,10 @@ object Main {
     println("dictionary hashmap created")
     val myStories: List[Array[String]] = createListOfStoryArrays()
     val traditionalChar = allChars()
-    //saveListOfStoriesToFileTradHanzi(myStories, traditionalChar)
+    saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
 
     //save default character list
-    //allCharsSaveToFiles()
+    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda)
   }
 
 

@@ -12,7 +12,9 @@ import scala.util.Try
 import upickle.default.{macroRW, ReadWriter => RW}
 import upickle.legacy.write
 
+import java.util
 import javax.swing.text.AbstractDocument.Content
+import scala.collection.mutable.ListBuffer
 
 object allheisigcharacters {
 
@@ -68,8 +70,36 @@ object allheisigcharacters {
     return tradHanzi//List(tradHanzi, simpHanzi, kanji)
   }
 
+  /*nestedLines.filter(each => Try(each(1).toInt).isSuccess)
+       .map(elem =>
+         new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)*/
+  def createdCollectionFromNested(nestedLines: List[List[String]], cedictTradDictionary: Map[String, String], tzai: Map[String, Int], isTraditional: Boolean): Array[HeisigObj] = {
+    var finalReturn: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]()
+    for (eachLines <- nestedLines) {
+      if (isTraditional && Try(eachLines(0).toInt).isSuccess) {
+        val character: String = eachLines(3).trim
+        val cedictEntry: String = cedictTradDictionary.get(character).getOrElse("no cedict entry")
+        val frequencyString: String = tzai.get(character).getOrElse("no frequency").toString
+        val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
+        val item = new HeisigObj(eachLines(0).toInt, "", "", character, "", textToInclude, List[Int](), "0001-01-01", 0)
+        finalReturn.addOne(item)
+      }else if(!isTraditional && Try(eachLines(1).toInt).isSuccess) {
+        val character: String = eachLines(4).trim
+        val cedictEntry: String = cedictTradDictionary.get(character).getOrElse("no cedict entry")
+        val frequencyString: String = tzai.get(character).getOrElse("no frequency").toString
+        val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
+        val item = new HeisigObj(eachLines(1).toInt, "", "", character, "", textToInclude, List[Int](), "0001-01-01", 0)
+        finalReturn.addOne(item)
+      }
+    }
+    val finalResult: Array[HeisigObj] = finalReturn.toList.toArray
+    return finalResult
+  }
 
-  def allCharsSaveToFiles() {
+  def allCharsSaveToFiles(cedictTradDictionary: Map[String, String],
+                          tzai: Map[String, Int],
+                          cedictSimpDictionary: Map[String, String],
+                          junda: Map[String, Int]) {
     val source = scala.io.Source.fromFile("heisigStories/raw/heisigraw.csv")
     val lines: List[String] = source.getLines().toList
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
@@ -84,16 +114,26 @@ object allheisigcharacters {
                      notableCards: List[Int],
                      dateOfLastReview: String,
                      repetitionValue: Int)*/
+    //add cedict and frequency string
 
-    val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",
-      nestedLines.filter(each => Try(each(0).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(0).toInt, "", "", elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray)
-    val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",
-      nestedLines.filter(each => Try(each(1).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)
+    val tradCards: Array[HeisigObj] = createdCollectionFromNested(nestedLines, cedictTradDictionary, tzai, true)
+    val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",tradCards)
+      /*nestedLines.filter(each => Try(each(0).toInt).isSuccess)
+        .map(elem =>
+          new HeisigObj(elem(0).toInt, "", "", elem(3), "", "", List[Int](), "0001-01-01", 0)
+          ).toArray)*/
+
+    val simpCards: Array[HeisigObj] = createdCollectionFromNested(nestedLines, cedictSimpDictionary, junda, false)
+    val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",simpCards)
+
+      /*nestedLines.filter(each => Try(each(1).toInt).isSuccess)
+        .map(elem =>
+          new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)*/
+
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray)
+        .map(elem =>
+          new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray)
 
     val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.deckName, tradHanzi.cards.sortBy(_.cardNumber))
     val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName, simpHanzi.cards.sortBy(_.cardNumber))

@@ -25,7 +25,10 @@ object personalStoriesParseInput {
     return finalArr
   }
 
-  def saveListOfStoriesToFileTradHanzi(privateStories: List[Array[String]], tradHeisig: HeisigCollection) {
+  def saveListOfStoriesToFileTradHanzi(privateStories: List[Array[String]],
+                                       tradHeisig: HeisigCollection,
+                                       cedictTradDictionary: Map[String, String],
+                                       tzai: Map[String, Int]) {
 
     /* /*case class HeisigObj (cardNumber: Int,
                       cardName: String,
@@ -39,7 +42,11 @@ object personalStoriesParseInput {
 
     val newListOfHeisig: Array[HeisigObj] = tradHeisig.cards.map(eachObj => {
       val story: String = getStoryByCharacter(eachObj.backSide, privateStories)
-      HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, "", List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
+      //get cedict text and tzai number
+      val cedictEntry: String = cedictTradDictionary.get(eachObj.backSide).getOrElse("no cedict entry")
+      val frequencyString: String = tzai.get(eachObj.backSide).getOrElse("no frequency").toString
+      val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
+      HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, textToInclude, List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
     })
     val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
