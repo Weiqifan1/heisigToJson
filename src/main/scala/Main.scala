@@ -39,19 +39,29 @@ object Main {
         (firstitem, allChars)
       })
     }
-    dyadArray.sortBy(_._1)
+    dyadArray = dyadArray.sortBy(_._1)
     //****
+
+    //*********************
+    //test if I have sorted the characters properly
+    val indexOfDeInDyadArray: List[(String, String)] = if(dyadArray.filter(each => each._1.equals("的")).size > 0) (dyadArray.filter(each => each._1.equals("的")).toList) else null
+    val indexOfFaInDyadArrayV1: List[(String, String)] = if (dyadArray.filter(each => each._1.equals("發")).size > 0) (dyadArray.filter(each => each._1.equals("發"))).toList else null
+    val indexOfFaInDyadArrayV2: List[(String, String)] = if(dyadArray.filter(each => each._1.equals("发")).size > 0) (dyadArray.filter(each => each._1.equals("发"))).toList else null
+
+    //******************
 
     var greatNestedBuffer: ListBuffer[ListBuffer[(String, String)]] = new ListBuffer[ListBuffer[(String, String)]]
     var tempListBuffer: ListBuffer[ (String, String)] = new ListBuffer[(String, String)]()
     for (itemNumber <- Range.inclusive(1, dyadArray.length-2)) {
       val previousItem: (String, String) = dyadArray(itemNumber-1)
       val currentItem: (String, String) = dyadArray(itemNumber)
+      val nextItem: (String, String) = dyadArray(itemNumber+1)
+      //if (currentItem._1.equals("发")) {
+      //  val test = ""
+      //}
       if (currentItem._1.equals("的")) {
         val test = "hello"
       }
-
-      val nextItem: (String, String) = dyadArray(itemNumber+1)
       if (previousItem._1.equals(currentItem._1) && nextItem._1.equals(currentItem._1)) { // previous and current and next are the same
         tempListBuffer.addOne(currentItem)
       }else if (previousItem._1.equals(currentItem._1) && !nextItem._1.equals(currentItem._1)) { //previous and current are the same, but the next is a new one
@@ -72,6 +82,13 @@ object Main {
       (eachNested(0)._1, eachNested.map(_._2).toList.mkString("\n"))
     }).toList
 
+    //try to get simplified
+    //val doubleLists = greatNestedBuffer.filter(eachNested => {eachNested.length > 1})
+    //val hair = greatNestedBuffer.filter(eachNested => {
+    //  eachNested(0)._1.equals("发")
+    //})
+    //val test = reducedNestedList.filter(each => {each._1.equals("发")})
+    //val index1 = reducedNestedList
 
     var hashmap = new mutable.HashMap[String, String]()
     for(x: (String, String) <- reducedNestedList ){
@@ -79,6 +96,10 @@ object Main {
     }
     val finalObject: Map[String, String] = Map() ++ hashmap;
     return finalObject;
+  }
+
+  def readEdictJapaneseDictionary(): Map[String, String] = {
+    return null
   }
 
   def main(args: Array[String]): Unit = {
@@ -91,16 +112,23 @@ object Main {
 
     val cedictTradDictionary: Map[String, String] = createCedictMap(true)
     val cedictSimpDictionary: Map[String, String] = createCedictMap(false)
+    val edictJapaneseDictionary: Map[String, String] = readEdictJapaneseDictionary()
 
+    val getDeCharacterTrad: String = if (cedictTradDictionary.contains("的"))  cedictTradDictionary("的") else "no result"
+    val getDeCharacterSimp: String = if (cedictSimpDictionary.contains("的"))  cedictSimpDictionary("的") else "no result"
+    val getFaCharacterTrad: String = if (cedictTradDictionary.contains("發"))  cedictTradDictionary("發") else "no result"
+    val getFaCharacterSimp: String = if (cedictSimpDictionary.contains("发"))  cedictSimpDictionary("发") else "no result"
 
+    val testTzai: String = if (tzai.contains("發")) tzai("發").toString else "no frequency"
+    val testJunda: String = if (junda.contains("发")) junda("发").toString else "no frequency"
 
     println("dictionary hashmap created")
     val myStories: List[Array[String]] = createListOfStoryArrays()
     val traditionalChar = allChars()
-    saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
+    //saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
 
     //save default character list
-    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda)
+    //allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda)
   }
 
 
