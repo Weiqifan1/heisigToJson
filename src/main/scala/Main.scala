@@ -98,7 +98,30 @@ object Main {
     return finalObject;
   }
 
+  //http://www.edrdg.org/wiki/index.php/KANJIDIC_Project
   def readEdictJapaneseDictionary(): Map[String, String] = {
+    val source = scala.io.Source.fromFile("heisigStories/dictionariesAndLists/kanjidic2.xml", "UTF-8")
+    var data: Array[String] = source.getLines.toArray
+    var data2: String = source.mkString("")
+
+    val filterMeaningReadingAndLiteralL: Array[String] = data.filter(eachLine => {
+        eachLine.startsWith("<reading r_type=\"ja") |
+        eachLine.startsWith("<literal>") |
+        eachLine.startsWith("<meaning>") |
+        eachLine.startsWith("<stroke_count>")
+    })
+    val BigString: String = filterMeaningReadingAndLiteralL.mkString("\n")
+    val eachChar: Array[String] = BigString.split("<literal>")
+    val nestedList: Array[String] = eachChar.map(eachCharString => {
+      eachCharString.toString.replaceAll("\\<.*?\\>", "")
+    }).toArray
+
+    //2021 10 27 kl. 23.06 - jeg har nu de rigtige linjer til at lave en hashmap, nu skal jeg bare tage tegnene ud saa jeg kan lave dem til keys
+
+
+
+
+
     return null
   }
 
