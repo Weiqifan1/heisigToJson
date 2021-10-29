@@ -5,12 +5,14 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.parser._
 import upickle._
-import java.nio.file.{Paths, Files}
-import java.nio.charset.StandardCharsets
 
+import java.nio.file.{Files, Paths}
+import java.nio.charset.StandardCharsets
 import scala.util.Try
 import upickle.default.{macroRW, ReadWriter => RW}
 import upickle.legacy.write
+
+import scala.collection.immutable.HashMap
 
 object personalStoriesParseInput {
 
@@ -50,7 +52,10 @@ object personalStoriesParseInput {
     })
 
     val emptyListOfPrevious: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
-    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, newListOfHeisig, emptyListOfPrevious.toArray)
+    val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, //deck info
+      "",
+      //settings
+      new HashMap[String, String](), newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
     Files.write(Paths.get("personalstories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
 

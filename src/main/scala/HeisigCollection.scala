@@ -1,6 +1,8 @@
-import upickle.default.{ReadWriter => RW, macroRW}
+import upickle.default.{macroRW, ReadWriter => RW}
 
-case class HeisigCollection(deckName: String, cards: Array[HeisigObj], previousCardsViewed: Array[HeisigObj])
+import scala.collection.immutable.HashMap
+
+case class HeisigCollection(deckName: String, deckInfo: String, settings: HashMap[String,String], cards: Array[HeisigObj])
 //object HeisigCollection{
 //  implicit val rw: RW[HeisigCollection] = macroRW
 //}

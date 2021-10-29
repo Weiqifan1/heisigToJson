@@ -147,7 +147,7 @@ object Main {
     saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
 
     //save default character list
-    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda, edictJapaneseDictionary)
+    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda, edictJapaneseDictionary, true)
   }
 
 
