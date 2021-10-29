@@ -81,7 +81,10 @@ object allheisigcharacters {
   /*nestedLines.filter(each => Try(each(1).toInt).isSuccess)
        .map(elem =>
          new HeisigObj(elem(1).toInt,"", "", elem(4), "","", List[Int](), "0001-01-01", 0)).toArray)*/
-  def createdCollectionFromNested(nestedLines: List[List[String]], cedictTradDictionary: Map[String, String], tzai: Map[String, Int], isTraditional: Boolean): Array[HeisigObj] = {
+  def createdCollectionFromNested(nestedLines: List[List[String]],
+                                  cedictTradDictionary: Map[String, String],
+                                  tzai: Map[String, Int],
+                                  isTraditional: Boolean): Array[HeisigObj] = {
     var finalReturn: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]()
     for (eachLines <- nestedLines) {
       if (isTraditional && Try(eachLines(0).toInt).isSuccess) {
@@ -107,7 +110,8 @@ object allheisigcharacters {
   def allCharsSaveToFiles(cedictTradDictionary: Map[String, String],
                           tzai: Map[String, Int],
                           cedictSimpDictionary: Map[String, String],
-                          junda: Map[String, Int]) {
+                          junda: Map[String, Int],
+                          edictJapaneseDictionary: Map[String, String]) {
     val source = scala.io.Source.fromFile("heisigStories/raw/heisigraw.csv")
     val lines: List[String] = source.getLines().toList
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
@@ -144,7 +148,10 @@ object allheisigcharacters {
     val kanji: HeisigCollection = HeisigCollection("HeisigKanji",
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
         .map(elem =>
-          new HeisigObj(elem(2).toInt,"", "", elem(5),"", "", List[Int](), "0001-01-01", 0)).toArray,
+          new HeisigObj(elem(2).toInt,"", "", elem(5),"",
+            //infoSecondary
+            if (edictJapaneseDictionary.contains(elem(5))) edictJapaneseDictionary.get(elem(5)).get else ""
+            , List[Int](), "0001-01-01", 0)).toArray,
       previousKanji.toArray)
 
     val emptyTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]

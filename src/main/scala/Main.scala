@@ -79,16 +79,8 @@ object Main {
       }
     }
     val reducedNestedList: List[(String, String)] = greatNestedBuffer.map(eachNested => {
-      (eachNested(0)._1, eachNested.map(_._2).toList.mkString("\n"))
+      (eachNested(0)._1, eachNested.map(_._2).toList.mkString("\n").replaceAll("/", "\n"))
     }).toList
-
-    //try to get simplified
-    //val doubleLists = greatNestedBuffer.filter(eachNested => {eachNested.length > 1})
-    //val hair = greatNestedBuffer.filter(eachNested => {
-    //  eachNested(0)._1.equals("发")
-    //})
-    //val test = reducedNestedList.filter(each => {each._1.equals("发")})
-    //val index1 = reducedNestedList
 
     var hashmap = new mutable.HashMap[String, String]()
     for(x: (String, String) <- reducedNestedList ){
@@ -117,12 +109,16 @@ object Main {
     }).toArray
 
     //2021 10 27 kl. 23.06 - jeg har nu de rigtige linjer til at lave en hashmap, nu skal jeg bare tage tegnene ud saa jeg kan lave dem til keys
+    val tupleArray: Array[(String, String)]  = nestedList.map(eachString => {
+      (eachString.split("\n")(0), eachString)
+    })
 
-
-
-
-
-    return null
+    var hashmap = new mutable.HashMap[String, String]()
+    for(x: (String, String) <- tupleArray ){
+      hashmap.put(x._1, x._2)
+    }
+    val finalObject: Map[String, String] = Map() ++ hashmap;
+    return finalObject
   }
 
   def main(args: Array[String]): Unit = {
@@ -148,10 +144,10 @@ object Main {
     println("dictionary hashmap created")
     val myStories: List[Array[String]] = createListOfStoryArrays()
     val traditionalChar = allChars()
-    //saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
+    saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
 
     //save default character list
-    //allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda)
+    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda, edictJapaneseDictionary)
   }
 
 
