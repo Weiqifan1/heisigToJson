@@ -22,8 +22,10 @@ object Main {
   }
 
   def createCedictMap(getTraditional: Boolean): Map[String, String] = {
-    val source = scala.io.Source.fromFile("heisigStories/dictionariesAndLists/cedict_ts.txt")
+    //val source = scala.io.Source.fromFile("heisigStories/dictionariesAndLists/cedict_ts.txt")//cedict20211029064558GMT
+    val source = scala.io.Source.fromFile("heisigStories/dictionariesAndLists/cedict20211029064558GMT.u8")
     var data: Array[Array[String]] = source.getLines.map(_.split("\\s+")).toArray
+      .drop(30)
     source.close
     var dyadArray: Array[(String, String)] = null
     if (getTraditional) {
@@ -147,7 +149,7 @@ object Main {
     saveListOfStoriesToFileTradHanzi(myStories, traditionalChar, cedictTradDictionary, tzai)
 
     //save default character list
-    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda, edictJapaneseDictionary, true)
+    allCharsSaveToFiles(cedictTradDictionary, tzai, cedictSimpDictionary, junda, edictJapaneseDictionary, false)
   }
 
 

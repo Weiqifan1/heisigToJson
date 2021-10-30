@@ -147,7 +147,7 @@ object allheisigcharacters {
     val previousTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val tradCards: Array[HeisigObj] = createdCollectionFromNested(nestedLines, cedictTradDictionary, tzai, true, useHeisigOriginalKeywords)
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi", //deck info
-      "",
+     "",
       //settings
       new HashMap[String, String](),tradCards)
       /*nestedLines.filter(each => Try(each(0).toInt).isSuccess)
@@ -186,19 +186,24 @@ object allheisigcharacters {
     val emptyTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val tradFinal: HeisigCollection = new HeisigCollection(tradHanzi.deckName,
       //deck info
-      "",
+      "characterOrdering: James W. Heisig & Timothy W. Richardson, Remembering Traditional Hanzi vol. 1 (2009) + Vol. 2 (2012),/n" +
+        "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
+      ,
       //settings
       new HashMap[String, String](),tradHanzi.cards.sortBy(_.cardNumber))
     val emptySimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName,
       //deck info
-      "",
+      "characterOrdering: James W. Heisig & Timothy W. Richardson, Remembering Simplified Hanzi vol. 1 (2009) + Vol. 2 (2012),\n" +
+        "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
+      ,
       //settings
       new HashMap[String, String](),simpHanzi.cards.sortBy(_.cardNumber))
     val emptyKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.deckName,
       //deck info
-      "",
+      "characterOrdering: James W. Heisig, Remembering The Kanji Vol 1 fifth edition (1977, 2007) + Vol 3 second edition (2008),\n" +
+        "dictionaryEntries: kanjidic2 Version 1.6 - April 2008, http://www.edrdg.org/edrdg/index.html Creative Commons Attribution-ShareAlike Licence (V3.0)",
       //settings
       new HashMap[String, String](),kanji.cards.sortBy(_.cardNumber))
 

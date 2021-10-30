@@ -53,7 +53,9 @@ object personalStoriesParseInput {
 
     val emptyListOfPrevious: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val returnCollection: HeisigCollection = HeisigCollection(tradHeisig.deckName, //deck info
-      "",
+      "characterOrdering: James W. Heisig & Timothy W. Richardson, Remembering Traditional Hanzi vol. 1 (2009) + Vol. 2 (2012),/n" +
+        "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
+      ,
       //settings
       new HashMap[String, String](), newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
