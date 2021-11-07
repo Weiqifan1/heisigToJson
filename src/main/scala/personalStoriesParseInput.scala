@@ -48,7 +48,7 @@ object personalStoriesParseInput {
       val cedictEntry: String = cedictTradDictionary.get(eachObj.backSide).getOrElse("no cedict entry")
       val frequencyString: String = tzai.get(eachObj.backSide).getOrElse("no frequency").toString
       val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
-      HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, textToInclude, List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue)
+      HeisigObj(eachObj.cardNumber,"", eachObj.frontSide, eachObj.backSide, story, textToInclude, List[Int](), eachObj.dateOfLastReview, eachObj.repetitionValue, List[Int](), List[String]())
     })
 
     val emptyListOfPrevious: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
@@ -57,7 +57,9 @@ object personalStoriesParseInput {
         "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
       ,
       //settings
-      new HashMap[String, String](), newListOfHeisig)
+      new HashMap[String, String](),
+      //tags
+      new HashMap[String, String](),newListOfHeisig)
     val collToJson: String = Encoder[HeisigCollection].apply(returnCollection).toString()
     Files.write(Paths.get("personalstories.txt"), collToJson.getBytes(StandardCharsets.UTF_8))
 

@@ -31,17 +31,7 @@ object allheisigcharacters {
     val nestedLines: List[List[String]] = lines.map(_.split('\t').toList)
     println(lines.length)
 
-    /*
-                      cardNumber: Int,
-                      cardName: String,
-                      frontSide:String,
-                      backSide:String,
-                      infoPrimary: String,
-                      infoSecondary: String,
-                      notableCards: List[Int],
-                      dateOfLastReview: String,
-                      repetitionValue: Int
-    */
+
 
     val previousTrad: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi",
@@ -49,8 +39,10 @@ object allheisigcharacters {
       "",
       //settings
       new HashMap[String, String](),
+      //tags
+      new HashMap[String, String](),
       nestedLines.filter(each => Try(each(0).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(0).toInt, "", elem(7), elem(3), "", "", List[Int](), "0001-01-01", 0)).toArray)
+        .map(elem => new HeisigObj(elem(0).toInt, "", elem(7), elem(3), "", "", List[Int](), "0001-01-01", 0, List[Int](), List[String]())).toArray)
 
     val previousSimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val simpHanzi: HeisigCollection = HeisigCollection("HeisigSimplifiedHanzi",
@@ -58,8 +50,10 @@ object allheisigcharacters {
       "",
       //settings
       new HashMap[String, String](),
+      //tags
+      new HashMap[String, String](),
       nestedLines.filter(each => Try(each(1).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(1).toInt, "",  elem(8), elem(4), "", "", List[Int](), "0001-01-01", 0)).toArray
+        .map(elem => new HeisigObj(elem(1).toInt, "",  elem(8), elem(4), "", "", List[Int](), "0001-01-01", 0, List[Int](), List[String]())).toArray
         )
 
     val previousKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
@@ -68,8 +62,10 @@ object allheisigcharacters {
       "",
       //settings
       new HashMap[String, String](),
+      //tags
+      new HashMap[String, String](),
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
-        .map(elem => new HeisigObj(elem(2).toInt, "", elem(9), elem(5), "", "", List[Int](), "0001-01-01", 0)).toArray,
+        .map(elem => new HeisigObj(elem(2).toInt, "", elem(9), elem(5), "", "", List[Int](), "0001-01-01", 0, List[Int](), List[String]())).toArray,
       )
 
 
@@ -106,7 +102,7 @@ object allheisigcharacters {
         val cedictEntry: String = cedictTradDictionary.get(character).getOrElse("no cedict entry")
         val frequencyString: String = tzai.get(character).getOrElse("no frequency").toString
         val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
-        val item = new HeisigObj(eachLines(0).toInt, "", originalHeisigKeyword, character, "", textToInclude, List[Int](), "0001-01-01", 0)
+        val item = new HeisigObj(eachLines(0).toInt, "", originalHeisigKeyword, character, "", textToInclude, List[Int](), "0001-01-01", 0, List[Int](), List[String]())
         finalReturn.addOne(item)
       }else if(!isTraditional && Try(eachLines(1).toInt).isSuccess) {
         val character: String = eachLines(4).trim
@@ -114,7 +110,7 @@ object allheisigcharacters {
         val cedictEntry: String = cedictTradDictionary.get(character).getOrElse("no cedict entry")
         val frequencyString: String = tzai.get(character).getOrElse("no frequency").toString
         val textToInclude: String = "frequency: " + frequencyString + " " + cedictEntry
-        val item = new HeisigObj(eachLines(1).toInt, "", originalHeisigKeyword, character, "", textToInclude, List[Int](), "0001-01-01", 0)
+        val item = new HeisigObj(eachLines(1).toInt, "", originalHeisigKeyword, character, "", textToInclude, List[Int](), "0001-01-01", 0, List[Int](), List[String]())
         finalReturn.addOne(item)
       }
     }
@@ -149,6 +145,8 @@ object allheisigcharacters {
     val tradHanzi: HeisigCollection = HeisigCollection("HeisigTraditionalHanzi", //deck info
      "",
       //settings
+      new HashMap[String, String](),
+      //tags
       new HashMap[String, String](),tradCards)
       /*nestedLines.filter(each => Try(each(0).toInt).isSuccess)
         .map(elem =>
@@ -161,6 +159,8 @@ object allheisigcharacters {
       //deck info
       "",
       //settings
+      new HashMap[String, String](),
+      //tags
       new HashMap[String, String](),simpCards)
 
       /*nestedLines.filter(each => Try(each(1).toInt).isSuccess)
@@ -173,13 +173,15 @@ object allheisigcharacters {
       "",
       //settings
       new HashMap[String, String](),
+      //tags
+      new HashMap[String, String](),
       nestedLines.filter(each => Try(each(2).toInt).isSuccess)
         .map(elem => {
           val heisigKeyword = if (useHeisigOriginalKeywords) elem(9) else ""
           new HeisigObj(elem(2).toInt,"", heisigKeyword, elem(5),"",
             //infoSecondary
             if (edictJapaneseDictionary.contains(elem(5))) edictJapaneseDictionary.get(elem(5)).get else ""
-            , List[Int](), "0001-01-01", 0)}
+            , List[Int](), "0001-01-01", 0, List[Int](), List[String]())}
         ).toArray
       )
 
@@ -190,6 +192,8 @@ object allheisigcharacters {
         "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
       ,
       //settings
+      new HashMap[String, String](),
+      //tags
       new HashMap[String, String](),tradHanzi.cards.sortBy(_.cardNumber))
     val emptySimp: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val simpFinal: HeisigCollection = new HeisigCollection(simpHanzi.deckName,
@@ -198,6 +202,8 @@ object allheisigcharacters {
         "dictionaryEntries: CC-CEDICT Latest release: 2021-10-29 06:45:58 GMT https://www.mdbg.net/chinese/dictionary?page=cedict Creative Commons Attribution-ShareAlike 4.0 International License"
       ,
       //settings
+      new HashMap[String, String](),
+      //tags
       new HashMap[String, String](),simpHanzi.cards.sortBy(_.cardNumber))
     val emptyKanji: ListBuffer[HeisigObj] = new ListBuffer[HeisigObj]
     val kanjiFinal: HeisigCollection = new HeisigCollection(kanji.deckName,
@@ -205,6 +211,8 @@ object allheisigcharacters {
       "characterOrdering: James W. Heisig, Remembering The Kanji Vol 1 fifth edition (1977, 2007) + Vol 3 second edition (2008),\n" +
         "dictionaryEntries: kanjidic2 Version 1.6 - April 2008, http://www.edrdg.org/edrdg/index.html Creative Commons Attribution-ShareAlike Licence (V3.0)",
       //settings
+      new HashMap[String, String](),
+      //tags
       new HashMap[String, String](),kanji.cards.sortBy(_.cardNumber))
 
     val tradJson: String = Encoder[HeisigCollection].apply(tradFinal).toString()
